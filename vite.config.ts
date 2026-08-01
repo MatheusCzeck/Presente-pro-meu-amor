@@ -4,20 +4,14 @@ import tailwindcss from '@tailwindcss/vite'
 import { fileURLToPath, URL } from 'node:url'
 
 export default defineConfig({
-  plugins: [react(),
-    tailwindcss()
+  base: '/Presente-pro-meu-amor/', // <-- Adicione essa linha exata!
+  plugins: [
+    react(),
+    tailwindcss(),
   ],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
-    },
-  },
-  server: {
-    host: 'localhost',
-    hmr: {
-      host: 'localhost',
-      protocol: 'ws',
-      port: 5173,
     },
   },
 })
