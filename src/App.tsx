@@ -9,9 +9,13 @@ import {
   MapPin,
   Music2,
   Timer,
+  Volume2,
+  VolumeX,
 } from "lucide-react"
 import { useTheme } from "@/hooks/use-theme"
+import { SomProvider, useSom } from "@/hooks/use-som"
 import { Abertura } from "@/components/Abertura"
+import { Carregando } from "@/components/Carregando"
 import { BottomNav, Sidebar, TopoMobile, type ItemNav } from "@/components/Navegacao"
 import { Contador } from "@/sections/Contador"
 import { Memorias } from "@/sections/Memorias"
@@ -46,13 +50,29 @@ const SECOES: Record<string, () => React.ReactElement> = {
 }
 
 export default function App() {
+  return (
+    <SomProvider>
+      <AppInterno />
+    </SomProvider>
+  )
+}
+
+function AppInterno() {
   const { tema, alternar } = useTheme()
+  const { mutado, alternarMute, tocar } = useSom()
+
+  const [carregando, setCarregando] = useState(true)
   const [comecou, setComecou] = useState(false)
   const [ativo, setAtivo] = useState("contador")
 
   function selecionar(id: string) {
+    tocar()
     setAtivo(id)
     window.scrollTo({ top: 0, behavior: "smooth" })
+  }
+
+  if (carregando) {
+    return <Carregando onTerminar={() => setCarregando(false)} />
   }
 
   if (!comecou) {
@@ -75,10 +95,17 @@ export default function App() {
         onSelecionar={selecionar}
         tema={tema}
         onAlternarTema={alternar}
+        mutado={mutado}
+        onAlternarMute={alternarMute}
       />
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <TopoMobile tema={tema} onAlternarTema={alternar} />
+        <TopoMobile 
+          tema={tema} 
+          onAlternarTema={alternar} 
+          mutado={mutado} 
+          onAlternarMute={alternarMute} 
+        />
 
         <main className="mx-auto w-full max-w-3xl flex-1 px-5 pb-28 pt-8 sm:px-8 lg:pb-16 lg:pt-12">
           <AnimatePresence mode="wait">
@@ -96,6 +123,20 @@ export default function App() {
       </div>
 
       <BottomNav itens={ITENS} ativo={ativo} onSelecionar={selecionar} />
+
+      {/* Botão flutuante: mute */}
+      <button
+        type="button"
+        onClick={alternarMute}
+        aria-label={mutado ? "Ativar som" : "Silenciar som"}
+        className="fixed left-4 top-4 z-40 flex size-10 items-center justify-center rounded-full border border-border bg-card text-foreground shadow-sm transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring lg:left-6 lg:top-6"
+      >
+        {mutado ? (
+          <VolumeX className="size-4" aria-hidden="true" />
+        ) : (
+          <Volume2 className="size-4" aria-hidden="true" />
+        )}
+      </button>
     </div>
   )
 }

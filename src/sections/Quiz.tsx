@@ -1,9 +1,10 @@
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import { Check, Download, Heart, RotateCcw, Share2, X } from "lucide-react"
 import { toBlob } from "html-to-image"
 import { QUIZ, RESULTADOS_QUIZ, CASAL } from "@/data"
 import { Botao, Card, CabecalhoSecao, SecaoAnimada } from "@/components/ui"
+import { dispararConfeteGrande } from "@/lib/confete"
 
 export function Quiz() {
   const [atual, setAtual] = useState(0)
@@ -50,6 +51,14 @@ export function Quiz() {
         : RESULTADOS_QUIZ.baixo
 
   const progresso = terminou ? 100 : (atual / total) * 100
+
+  /* Confete quando ela acerta tudo. */
+  useEffect(() => {
+    if (terminou && acertos === total) {
+      dispararConfeteGrande()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [terminou])
 
   /* Renderiza o card oculto como PNG (Blob), usando html-to-image.
      Diferente do html2canvas, essa lib deixa o próprio navegador desenhar

@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react"
-import { Heart, MoonStar, Sun } from "lucide-react"
+import { Heart, MoonStar, Sun, Volume2, VolumeX } from "lucide-react"
 import { CASAL } from "@/data"
 
 export type ItemNav = {
@@ -16,12 +16,16 @@ export function Sidebar({
   onSelecionar,
   tema,
   onAlternarTema,
+  mutado,
+  onAlternarMute,
 }: {
   itens: ItemNav[]
   ativo: string
   onSelecionar: (id: string) => void
   tema: "claro" | "escuro"
   onAlternarTema: () => void
+  mutado: boolean
+  onAlternarMute: () => void
 }) {
   return (
     <aside className="hidden w-64 shrink-0 border-r border-border bg-card lg:flex lg:flex-col">
@@ -68,19 +72,34 @@ export function Sidebar({
           </ul>
         </nav>
 
-        {/* Alternador de tema */}
-        <button
-          type="button"
-          onClick={onAlternarTema}
-          className="mt-auto flex items-center gap-3 rounded-full border border-border px-4 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
-        >
-          {tema === "escuro" ? (
-            <Sun className="size-4 shrink-0" aria-hidden="true" />
-          ) : (
-            <MoonStar className="size-4 shrink-0" aria-hidden="true" />
-          )}
-          <span>{tema === "escuro" ? "Tema claro" : "Tema escuro"}</span>
-        </button>
+        {/* Alternador de tema + mute */}
+        <div className="mt-auto flex items-center gap-2">
+          <button
+            type="button"
+            onClick={onAlternarTema}
+            className="flex flex-1 items-center gap-3 rounded-full border border-border px-4 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+          >
+            {tema === "escuro" ? (
+              <Sun className="size-4 shrink-0" aria-hidden="true" />
+            ) : (
+              <MoonStar className="size-4 shrink-0" aria-hidden="true" />
+            )}
+            <span>{tema === "escuro" ? "Tema claro" : "Tema escuro"}</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={onAlternarMute}
+            aria-label={mutado ? "Ativar som" : "Silenciar som"}
+            className="flex size-11 shrink-0 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+          >
+            {mutado ? (
+              <VolumeX className="size-4" aria-hidden="true" />
+            ) : (
+              <Volume2 className="size-4" aria-hidden="true" />
+            )}
+          </button>
+        </div>
       </div>
     </aside>
   )
@@ -90,9 +109,13 @@ export function Sidebar({
 export function TopoMobile({
   tema,
   onAlternarTema,
+  mutado,
+  onAlternarMute,
 }: {
   tema: "claro" | "escuro"
   onAlternarTema: () => void
+  mutado: boolean
+  onAlternarMute: () => void
 }) {
   return (
     <header className="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-border bg-background/90 px-5 py-3 backdrop-blur-md lg:hidden">
@@ -102,18 +125,34 @@ export function TopoMobile({
         </span>
         <span className="font-serif text-base">Nosso Lugar</span>
       </div>
-      <button
-        type="button"
-        onClick={onAlternarTema}
-        aria-label={tema === "escuro" ? "Ativar tema claro" : "Ativar tema escuro"}
-        className="rounded-full border border-border p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
-      >
-        {tema === "escuro" ? (
-          <Sun className="size-4" />
-        ) : (
-          <MoonStar className="size-4" />
-        )}
-      </button>
+
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
+          onClick={onAlternarMute}
+          aria-label={mutado ? "Ativar som" : "Silenciar som"}
+          className="rounded-full border border-border p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+        >
+          {mutado ? (
+            <VolumeX className="size-4" />
+          ) : (
+            <Volume2 className="size-4" />
+          )}
+        </button>
+
+        <button
+          type="button"
+          onClick={onAlternarTema}
+          aria-label={tema === "escuro" ? "Ativar tema claro" : "Ativar tema escuro"}
+          className="rounded-full border border-border p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+        >
+          {tema === "escuro" ? (
+            <Sun className="size-4" />
+          ) : (
+            <MoonStar className="size-4" />
+          )}
+        </button>
+      </div>
     </header>
   )
 }

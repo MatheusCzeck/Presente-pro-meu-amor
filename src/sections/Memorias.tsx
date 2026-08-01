@@ -3,9 +3,16 @@ import { AnimatePresence, motion } from "framer-motion"
 import { Heart, X } from "lucide-react"
 import { MEMORIAS, type Memoria } from "@/data"
 import { CabecalhoSecao, SecaoAnimada } from "@/components/ui"
+import { useSom } from "@/hooks/use-som"
 
 export function Memorias() {
   const [aberta, setAberta] = useState<Memoria | null>(null)
+  const { tocar } = useSom()
+
+  function abrir(memoria: Memoria) {
+    tocar()
+    setAberta(memoria)
+  }
 
   /* Fecha o lightbox com a tecla Esc e trava o scroll do fundo. */
   useEffect(() => {
@@ -34,7 +41,7 @@ export function Memorias() {
           <motion.button
             key={memoria.titulo}
             type="button"
-            onClick={() => setAberta(memoria)}
+            onClick={() => abrir(memoria)}
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.04 * i, duration: 0.3 }}

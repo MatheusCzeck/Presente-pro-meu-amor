@@ -15,6 +15,7 @@ import {
 } from "lucide-react"
 import { IDEIAS_DATE } from "@/data"
 import { Botao, Card, CabecalhoSecao, SecaoAnimada } from "@/components/ui"
+import { dispararConfeteLeve } from "@/lib/confete"
 
 const ICONES: Record<string, typeof Coffee> = {
   picnic: Sandwich,
@@ -47,6 +48,7 @@ export function Roleta() {
         window.clearInterval(embaralhar)
         setIndice(Math.floor(Math.random() * IDEIAS_DATE.length))
         setGirando(false)
+        dispararConfeteLeve()
       }
     }, 100)
     timers.current.push(embaralhar)
